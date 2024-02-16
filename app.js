@@ -4,7 +4,8 @@ const cors = require('cors')
 const notFound = require('./middlewares/notFound')
 const errorMiddleware = require('./middlewares/error')
 const authRoute = require('./routes/auth-route')
-const todoRoute = require('./routes/todo-route')
+const reservationRoute = require('./routes/reservation-route')
+
 
 const app = express()
 
@@ -13,7 +14,7 @@ app.use(express.json())
 
 // service
 app.use('/auth', authRoute)
-app.use('/todos', todoRoute)
+app.use('/reservation', reservationRoute)
 
 // notFound
 app.use( notFound )

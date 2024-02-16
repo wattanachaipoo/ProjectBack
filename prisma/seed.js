@@ -17,6 +17,8 @@ const todoData = [
 
 ]
 
+
+
 const run = async () => {
   await prisma.user.createMany({
     data : userData

@@ -16,69 +16,34 @@ model User {
   password       String           @db.VarChar(72)
   email          String?
   reservations   Reservation[]
-  checkins       CheckIns[]
   BookingHistory BookingHistory[]
+  Payments       Payments[]
 
   @@map("users")
 }
 
 model Reservation {
-  id        Int      @id @default(autoincrement())
-  number_of_guests String @db.VarChar(150)
-  start_date    DateTime @map("due_date") @db.Date
-  end_date    DateTime @map("end_date") @db.Date
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    Int      @map("user_id")
-  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
-  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamp(0)
-  rooms       Rooms[]
+  id               Int      @id @default(autoincrement())
+  number_of_guests String   @db.VarChar(150)
+  start_date       DateTime @map("start_date") @db.Date
+  end_date         DateTime @map("end_date") @db.Date
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId           Int      @map("user_id")
+  number           String
+  room_type        String
+  price            String
 
   @@map("Reservation")
-}
-
-//ตารางห้อง
-model Rooms {
-  id             Int         @id @default(autoincrement())
-  reservation    Reservation @relation(fields: [reservation_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  reservation_id Int
-  room_type      String
-  price          String
-  status         String
-  chackIn        CheckIns[]
-  payments       Payments[]
-}
-
-//ตาราง Chack-in
-model CheckIns {
-  id           Int        @id @default(autoincrement())
-  room         Rooms      @relation(fields: [room_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  room_id      Int
-  user         User       @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  user_id      Int
-  chackin_date DateTime
-  chackOut     CheckOut[]
-}
-
-//ตาราง Chack-out
-model CheckOut {
-  id            Int        @id @default(autoincrement())
-  chackin       CheckIns   @relation(fields: [chackin_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  chackin_id    Int
-  chackout_date DateTime
-  payments      Payments[]
 }
 
 //ตารางใบเสร็จ
 
 model Payments {
   id             Int              @id @default(autoincrement())
-  chackout       CheckOut         @relation(fields: [chackout_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  chackout_id    Int
-  room           Rooms            @relation(fields: [room_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  room_id        Int
+  user           User             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  user_id        Int
   amout          String
   payment_date   DateTime
-  payment_method String
   BookingHistory BookingHistory[]
 }
 
@@ -90,10 +55,4 @@ model BookingHistory {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int      @map("user_id")
   history     String
-}
-
-enum Status {
-  PENDING
-  DOING
-  DONE
 }
