@@ -16,8 +16,6 @@ model User {
   password       String           @db.VarChar(72)
   email          String?
   reservations   Reservation[]
-  BookingHistory BookingHistory[]
-  Payments       Payments[]
 
   @@map("users")
 }
@@ -29,30 +27,9 @@ model Reservation {
   end_date         DateTime @map("end_date") @db.Date
   user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId           Int      @map("user_id")
-  number           String
-  room_type        String
-  price            String
+  number           String   @map("number") @db.VarChar(45)
+  room_type        String   @map("room_type") @db.VarChar(60)
+  price            String   @map("price") @db.VarChar(15)
 
   @@map("Reservation")
-}
-
-//ตารางใบเสร็จ
-
-model Payments {
-  id             Int              @id @default(autoincrement())
-  user           User             @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  user_id        Int
-  amout          String
-  payment_date   DateTime
-  BookingHistory BookingHistory[]
-}
-
-// ตารางประวัติการจอง
-model BookingHistory {
-  id          Int      @id @default(autoincrement())
-  payments    Payments @relation(fields: [payments_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  payments_id Int
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int      @map("user_id")
-  history     String
 }
